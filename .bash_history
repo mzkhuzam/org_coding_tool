@@ -30,3 +30,48 @@ git config --global user.name "mzkhuzam"
 git init
 git remote add origin https://github.com/mzkhuzam/org_coding_tool.git
 touch .gitignore
+git add . 
+git rm --cached .gemini/extensions/vertex
+git remote -v
+git remote remove google
+git push -u origin main
+git branch
+git push -u origin master
+rm testing.py
+git add . 
+git rm --cached -f .gemini
+git rm --cached -rf .gemini
+cat > .gitignore << EOF
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Cloud Shell
+.gemini/
+.gcloudignore
+.google/
+.vscode/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+EOF
+
+rm -rf .gemini
