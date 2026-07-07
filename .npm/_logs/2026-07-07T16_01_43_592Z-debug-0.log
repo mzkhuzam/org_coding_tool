@@ -13,3 +13,9 @@
 12 silly logfile done cleaning log files
 13 silly packumentCache heap:2348810240 maxSize:587202560 maxEntrySize:293601280
 14 silly packumentCache heap:2348810240 maxSize:587202560 maxEntrySize:293601280
+15 verbose cwd /home/mzkhuzam
+16 verbose os Linux 6.6.137+
+17 verbose node v24.16.0
+18 verbose npm  v11.17.0
+19 verbose exit 0
+20 info ok

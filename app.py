@@ -40,7 +40,8 @@ if not labeller:
 # =============================================================================
 ORG_BINARY_MAPPING = {
     "Yes - Organizational": 1,
-    "No - Individual": 0
+    "No - Individual": 0, 
+    "Not sure": 3, 
 }
 
 WEB_BINARY_MAPPING = {
@@ -135,32 +136,41 @@ if current_index < total_records:
     
     st.info(f"📊 Record {current_index + 1} of {total_records}")
     st.progress((current_index + 1) / total_records)
+
+    st.markdown("### Organization")
+    st.write(f"**Organization:** {record.get('organization', 'N/A')}")
+    st.markdown("---")
     
-    st.markdown("### 📝 Comment to Code")
+    st.markdown("### Comment")
     comment_text = record.get('comment', '')
     if comment_text:
         st.markdown(f"**Comment:** {comment_text}")
     else:
         st.warning("⚠️ No comment text found.")
+
+    st.markdown("---")
+
+    st.markdown("### Attachment Text")
+    attachment = record.get('attachment_text', '')
+    if attachment:
+        with st.expander("### Click for full text", expanded=False):
+            attachment
+    else:
+        st.write("None")
+
+    st.markdown("---")
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.write(f"**Organization:** {record.get('organization', 'N/A')}")
         st.write(f"**First Name:** {record.get('firstName', 'N/A')}")
         st.write(f"**Last Name:** {record.get('lastName', 'N/A')}")
     with col2:
         website = record.get('website', '')
         st.write(f"**Website:** {website if website else 'Not provided'}")
-        attachment = record.get('attachment_text', '')
-        if attachment:
-            preview = attachment[:200] + "..." if len(attachment) > 200 else attachment
-            st.write(f"**Attachment:** {preview}")
-        else:
-            st.write("**Attachment:** None")
     with col3:
         existing_note = record.get('organization_detection_notes', '')
         st.write(f"**Existing note:** {existing_note if existing_note else 'None'}")
-        existing_org_type = record.get('org_type', '')
+        existing_org_type = record.get('org_type', '') #todo - need to remove this
         st.write(f"**Org type:** {existing_org_type if existing_org_type else 'Not filled'}")
     
     st.markdown("---")
@@ -187,6 +197,9 @@ if current_index < total_records:
         horizontal=True,
         index=None
     )
+
+    if is_organizational == "Not sure":
+        st.info("Please explain why you're unsure in the notes field (#3).")
 
     website_correct = st.radio(
         "**2. Is this the website correct?**",
@@ -278,7 +291,6 @@ if current_index < total_records:
             st.info(f"📊 Coded: {len(st.session_state.coded_data)} records")
 
 else:
-    st.balloons()
     st.markdown("## 🎉 You've coded all your assigned records!")
     st.markdown("Thank you for your work!")
     
