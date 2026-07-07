@@ -1,0 +1,31 @@
+0 verbose cli /usr/local/nvm/versions/node/v24.16.0/bin/node /usr/local/nvm/versions/node/v24.16.0/lib/node_modules/npm/bin/npm-cli.js
+1 info using npm@11.17.0
+2 info using node@v24.16.0
+3 silly config load:file:/usr/local/nvm/versions/node/v24.16.0/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/mzkhuzam/.npmrc
+5 silly config load:file:/usr/local/nvm/versions/node/v24.16.0/etc/npmrc
+6 verbose title npm exec git+https://github.com/gemini-cli-extensions/data-agent-kit-starter-pack.git --mode=visualization
+7 verbose argv "exec" "--yes" "--" "git+https://github.com/gemini-cli-extensions/data-agent-kit-starter-pack.git" "--mode=visualization"
+8 verbose logfile logs-max:10 dir:/home/mzkhuzam/.npm/_logs/2026-07-07T16_01_43_641Z-
+9 verbose logfile /home/mzkhuzam/.npm/_logs/2026-07-07T16_01_43_641Z-debug-0.log
+10 silly logfile start cleaning logs, removing 10 files
+11 silly packumentCache heap:2348810240 maxSize:587202560 maxEntrySize:293601280
+12 silly logfile done cleaning log files
+13 silly packumentCache heap:2348810240 maxSize:587202560 maxEntrySize:293601280
+14 silly packumentCache heap:2348810240 maxSize:587202560 maxEntrySize:293601280
+15 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules
+16 silly idealTree buildDeps
+17 silly fetch manifest data-agent-kit-starter-pack@github:gemini-cli-extensions/data-agent-kit-starter-pack
+18 silly placeDep ROOT data-agent-kit-starter-pack@0.4.0 REPLACE for:  want: github:gemini-cli-extensions/data-agent-kit-starter-pack
+19 silly reify moves {}
+20 silly audit bulk request {
+20 silly audit   'cross-spawn': [ '7.0.6' ],
+20 silly audit   isexe: [ '2.0.0' ],
+20 silly audit   'path-key': [ '3.1.1' ],
+20 silly audit   'shebang-command': [ '2.0.0' ],
+20 silly audit   'shebang-regex': [ '3.0.0' ],
+20 silly audit   which: [ '2.0.2' ],
+20 silly audit   'data-agent-kit-starter-pack': [ '0.4.0' ]
+20 silly audit }
+21 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 212ms
+22 silly audit report {}

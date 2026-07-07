@@ -19,7 +19,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏢 Organizational Comments Coding")
+st.title("OMB Organizational Comments Coding")
 st.markdown("Identify whether comments are made **on behalf of an organization** vs. individuals.")
 
 # Initialize session state for storing coded data
@@ -29,10 +29,10 @@ if 'coded_data' not in st.session_state:
 # =============================================================================
 # LABELLER IDENTITY
 # =============================================================================
-labeller = st.text_input("Enter your name/coder ID:", key="labeller")
+labeller = st.text_input("Enter your name:", key="labeller")
 
 if not labeller:
-    st.warning("Please enter your name/coder ID above to begin coding.")
+    st.warning("Please enter your name ID above to begin coding.")
     st.stop()
 
 # =============================================================================
@@ -41,6 +41,11 @@ if not labeller:
 ORG_BINARY_MAPPING = {
     "Yes - Organizational": 1,
     "No - Individual": 0
+}
+
+WEB_BINARY_MAPPING = {
+    "Yes - Website is correct": 1,
+    "No - Website needs updating": 0
 }
 
 ORG_TYPE_MAPPING = {
@@ -138,14 +143,11 @@ if current_index < total_records:
     else:
         st.warning("⚠️ No comment text found.")
     
-    st.markdown("---")
-    st.markdown("### 🔍 Context")
-    
     col1, col2, col3 = st.columns(3)
     with col1:
+        st.write(f"**Organization:** {record.get('organization', 'N/A')}")
         st.write(f"**First Name:** {record.get('firstName', 'N/A')}")
         st.write(f"**Last Name:** {record.get('lastName', 'N/A')}")
-        st.write(f"**Organization:** {record.get('organization', 'N/A')}")
     with col2:
         website = record.get('website', '')
         st.write(f"**Website:** {website if website else 'Not provided'}")
@@ -168,8 +170,6 @@ if current_index < total_records:
         **Organizational comments** = statements formally prepared and submitted **on behalf of an organization itself**.
         
         **Examples:**
-        - ✅ "The University of Illinois opposes this policy." - signed by the Chancellor
-        - ❌ "As a professor at UIUC, I oppose this policy." - individual professor
         
         **What to look for:**
         1. "On behalf of [Organization]"
@@ -187,9 +187,17 @@ if current_index < total_records:
         horizontal=True,
         index=None
     )
+
+    website_correct = st.radio(
+        "**2. Is this the website correct?**",
+        list(WEB_BINARY_MAPPING.keys()),
+        key=f"website_correct_{current_index}",
+        horizontal=True,
+        index=None
+    )
     
     notes = st.text_area(
-        "**2. Coding Notes / Reasoning**",
+        "**3. Coding Notes / Reasoning**",
         placeholder="Explain your reasoning...",
         key=f"notes_{current_index}",
         height=80
@@ -204,7 +212,7 @@ if current_index < total_records:
     )
     
     if is_organizational == "No - Individual":
-        st.info("💡 'Not Applicable' will be recorded for organization type.")
+        st.info("'Not Applicable' will be recorded for organization type.")
     
     st.markdown("---")
     
