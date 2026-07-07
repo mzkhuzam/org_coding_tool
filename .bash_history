@@ -82,3 +82,14 @@ git push -u origin master
 git branch -m master main
 git push -u origin main
 git pull origin main --allow-unrelated-histories
+git add .
+git commit -m "Merge remote changes"
+git push -u origin main
+# Pull remote changes and merge them into your local branch
+git pull origin main
+# If this doesn't work due to unrelated histories, try:
+git pull origin main --allow-unrelated-histories
+# Now push your changes
+git push -u origin main
+git pull --rebase origin main
+git status
