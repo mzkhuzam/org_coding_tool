@@ -75,3 +75,10 @@ Thumbs.db
 EOF
 
 rm -rf .gemini
+git add .
+git commit -m "Updated with gemini and other folders removed"
+git push -u origin main
+git push -u origin master
+git branch -m master main
+git push -u origin main
+git pull origin main --allow-unrelated-histories
