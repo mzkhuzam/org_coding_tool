@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "data-agent-kit-starter-pack": "github:gemini-cli-extensions/data-agent-kit-starter-pack"
+  },
+  "_npx": {
+    "packages": [
+      "git+https://github.com/gemini-cli-extensions/data-agent-kit-starter-pack.git"
+    ]
+  }
+}
