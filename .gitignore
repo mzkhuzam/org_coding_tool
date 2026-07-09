@@ -32,3 +32,5 @@ Thumbs.db
 .codeoss/
 README-cloudshell.txt
 *.log
+.cache/
+.docker/
