@@ -39,3 +39,5 @@ README-cloudshell.txt
 .rustup/
 .profile
 .gitconfig
+.bashrc
+.sudo_as_admin_successful
