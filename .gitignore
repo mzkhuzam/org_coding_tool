@@ -34,3 +34,8 @@ README-cloudshell.txt
 *.log
 .cache/
 .docker/
+.config/powershell
+.npm/
+.rustup/
+.profile
+.gitconfig
