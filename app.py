@@ -9,6 +9,7 @@ import gspread
 from google.oauth2 import service_account
 from datetime import datetime
 import time
+import os
 
 # =============================================================================
 # PAGE CONFIG
@@ -62,28 +63,51 @@ ORG_TYPE_MAPPING = {
 # =============================================================================
 # LOAD DATA
 # =============================================================================
-@st.cache_data
-def load_data():
-    try:
-        GOOGLE_CREDENTIALS = st.secrets["GOOGLE_CREDENTIALS"]
-        GOOGLE_SHEET_URL = st.secrets["GOOGLE_SHEET_URL"]
-        INPUT_SHEET_NAME = st.secrets["INPUT_SHEET_NAME"]
-        
-        creds_dict = json.loads(GOOGLE_CREDENTIALS)
-        gc = gspread.service_account_from_dict(creds_dict)
-        
-        sheet = gc.open_by_url(GOOGLE_SHEET_URL)
-        input_worksheet = sheet.worksheet(INPUT_SHEET_NAME)
-        data = input_worksheet.get_all_records()
-        df = pd.DataFrame(data)
-        
-        return df, sheet
-    except Exception as e:
-        st.error(f"Failed to connect to Google Sheets: {str(e)}")
-        st.stop()
 
-df, sheet = load_data()
-INPUT_SHEET_NAME = st.secrets["INPUT_SHEET_NAME"]
+@st.cache_resource
+def connect_to_google_sheet():
+    """Create and cache the Google Sheets connection."""
+    google_credentials = os.environ["GOOGLE_CREDENTIALS"]
+    google_sheet_url = os.environ["GOOGLE_SHEET_URL"]
+
+    creds_dict = json.loads(google_credentials)
+    gc = gspread.service_account_from_dict(creds_dict)
+
+    return gc.open_by_url(google_sheet_url)
+
+
+@st.cache_data(ttl=60)
+def load_data():
+    """Load worksheet data and cache it for 60 seconds."""
+    sheet = connect_to_google_sheet()
+    input_sheet_name = os.environ["INPUT_SHEET_NAME"]
+
+    input_worksheet = sheet.worksheet(input_sheet_name)
+    data = input_worksheet.get_all_records()
+
+    return pd.DataFrame(data)
+
+
+try:
+    INPUT_SHEET_NAME = os.environ["INPUT_SHEET_NAME"]
+    sheet = connect_to_google_sheet()
+    df = load_data()
+
+except KeyError as e:
+    st.error(f"Missing Render environment variable: {e.args[0]}")
+    st.stop()
+
+except json.JSONDecodeError:
+    st.error(
+        "GOOGLE_CREDENTIALS is not valid JSON. In Render, its value must "
+        "contain the complete service-account JSON object."
+    )
+    st.stop()
+
+except Exception as e:
+    st.error(f"Failed to connect to Google Sheets: {e}")
+    st.stop()
+
 
 if df.empty:
     st.error("No data found in the spreadsheet!")
