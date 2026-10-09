@@ -28,6 +28,26 @@ if 'coded_data' not in st.session_state:
     st.session_state.coded_data = []
 
 # =============================================================================
+# PASSWORD
+# =============================================================================
+
+CORRECT_PASSWORD = os.environ.get("APP_PASSWORD")
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    st.subheader("🔒 Password To Access")
+    pwd = st.text_input("Enter password:", type="password", key="pwd_input")
+    if st.button("Submit"):
+        if pwd == CORRECT_PASSWORD:
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("Incorrect password. Please try again.")
+    st.stop()
+
+# =============================================================================
 # LABELLER IDENTITY
 # =============================================================================
 labeller = st.text_input("Enter your name:", key="labeller")
