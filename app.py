@@ -122,7 +122,6 @@ CODER_RANGES = {
 # =============================================================================
 PREVIEW_MODE = os.environ.get("PREVIEW_MODE") == "1"
 
-
 # =============================================================================
 # LOAD DATA
 # =============================================================================
@@ -160,7 +159,7 @@ if PREVIEW_MODE:
             "firstName": "Jane",
             "lastName": "Doe",
             "website": "https://example.org",
-            "organization_detection_notes": "",
+            "extra_notes": "",
         },
         {
             "id": "preview-2",
@@ -170,7 +169,7 @@ if PREVIEW_MODE:
             "firstName": "John",
             "lastName": "Smith",
             "website": "",
-            "organization_detection_notes": "Borderline case.",
+            "extra_notes": "Borderline case.",
         },
         {
             "id": "preview-3",
@@ -180,7 +179,7 @@ if PREVIEW_MODE:
             "firstName": "",
             "lastName": "",
             "website": "https://example.com",
-            "organization_detection_notes": "",
+            "extra_notes": "",
         },
     ])
     st.warning("🧪 PREVIEW MODE — no data is being read from or written to Google Sheets.")
@@ -392,14 +391,13 @@ if current_index < total_records:
     geographic_scope = geographic_scope_other = None
 
     if is_organizational == "Yes - Organizational":
-        org_sector = st.selectbox(
-            "**3. Organization sector**",
+        org_sector = st.multiselect(
+            "**3. Organization sector** (select all that apply)",
             list(ORG_SECTOR_MAPPING.keys()),
             key=f"org_sector_{current_index}",
-            index=None,
-            placeholder="Choose an option..."
+            placeholder="Choose one or more..."
         )
-        if org_sector == "other":
+        if "other" in (org_sector or []):
             org_sector_other = st.text_input(
                 "**Specify organization sector**",
                 key=f"org_sector_other_{current_index}",
@@ -461,7 +459,7 @@ if current_index < total_records:
     attachment_status = "missing or unreadable" if attachment_problem else None
 
     notes = st.text_area(
-        "**Organization detection notes**",
+        "**Extra notes:**",
         key=f"notes_{current_index}",
         height=80
     )
@@ -512,7 +510,7 @@ if current_index < total_records:
 
                 "website": website_entry if website_choice == "Fill in" else "none found",
                 "website_choice": website_choice,
-                "organization_detection_notes": notes,
+                "extra_notes": notes,
 
                 "is_organizational": ORG_BINARY_MAPPING.get(is_organizational),
                 "is_organizational_text": is_organizational,
@@ -565,7 +563,7 @@ def render_download_section():
 
     preferred_cols = [
         "timestamp", "labeller", "record_index", "original_id", "comment_text",
-        "website", "website_choice", "organization_detection_notes",
+        "website", "website_choice", "extra_notes",
         "is_organizational", "is_organizational_text",
         "individual_type", "individual_type_text",
         "org_sector", "org_sector_text", "org_sector_other",
