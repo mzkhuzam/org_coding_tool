@@ -482,18 +482,17 @@ if current_index < total_records:
             validation_errors.append("Please select an individual type.")
         if is_organizational == "Yes - Organizational":
             if not org_sector:
-                validation_errors.append("Please select an organization sector.")
-            if org_sector == "other" and not org_sector_other:
-                validation_errors.append("Please specify the organization sector.")
+              validation_errors.append("Please select an organization sector.")
+            if org_sector and "other" in org_sector and not org_sector_other:
+              validation_errors.append("Please specify the organization sector.")
             if not org_type:
-                validation_errors.append("Please select an organization type.")
+              validation_errors.append("Please select an organization type.")
             if org_type == "other" and not org_type_other:
-                validation_errors.append("Please specify the organization type.")
+              validation_errors.append("Please specify the organization type.")
             if not geographic_scope:
-                validation_errors.append("Please select a geographic scope.")
+              validation_errors.append("Please select a geographic scope.")
             if geographic_scope == "other" and not geographic_scope_other:
-                validation_errors.append("Please specify the geographic scope.")
-            # population_served is optional
+              validation_errors.append("Please specify the geographic scope.")
         if confidence is None:
             validation_errors.append("Please select a confidence level.")
 
@@ -518,9 +517,9 @@ if current_index < total_records:
                 "individual_type": INDIVIDUAL_TYPE_MAPPING.get(individual_type) if individual_type else None,
                 "individual_type_text": individual_type,
 
-                "org_sector": ORG_SECTOR_MAPPING.get(org_sector) if org_sector else None,
-                "org_sector_text": org_sector,
-                "org_sector_other": org_sector_other,
+                "org_sector": json.dumps([ORG_SECTOR_MAPPING[s] for s in org_sector]) if org_sector else None,
+                "org_sector_text": ", ".join(org_sector) if org_sector else None,
+                "org_sector_other": org_sector_other if org_sector and "other" in org_sector else None,
 
                 "org_type": ORG_TYPE_MAPPING.get(org_type) if org_type else None,
                 "org_type_text": org_type,
