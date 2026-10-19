@@ -59,13 +59,14 @@ ORG_BINARY_MAPPING = {
 
 ORG_SECTOR_MAPPING = {
     "health": 1,
-    "education": 2,
-    "civil rights / racial and ethnic advocacy": 3,
-    "legal": 4,
-    "government / public administration": 5,
-    "religious or cultural": 6,
-    "business / economic": 7,
-    "research": 8,
+    "social services": 2,
+    "education": 3,
+    "civil rights / racial and ethnic advocacy": 4,
+    "legal": 5,
+    "government / public administration": 6,
+    "religious or cultural": 7,
+    "business / economic": 8,
+    "research": 9,
     "other": 99,
 }
 
@@ -158,7 +159,6 @@ if PREVIEW_MODE:
             "attachment_text": "Fake attachment text.",
             "firstName": "Jane",
             "lastName": "Doe",
-            "website": "https://example.org",
             "extra_notes": "",
         },
         {
@@ -168,7 +168,6 @@ if PREVIEW_MODE:
             "attachment_text": "",
             "firstName": "John",
             "lastName": "Smith",
-            "website": "",
             "extra_notes": "Borderline case.",
         },
         {
@@ -178,7 +177,6 @@ if PREVIEW_MODE:
             "attachment_text": "Some text.",
             "firstName": "",
             "lastName": "",
-            "website": "https://example.com",
             "extra_notes": "",
         },
     ])
@@ -315,40 +313,31 @@ if current_index < total_records:
     st.info(f"📊 Record {current_index + 1} of {total_records}")
     st.progress((current_index + 1) / total_records)
 
-    st.markdown("### Comment ID")
-    st.write(f"{record.get('id', 'N/A')}")
-    st.markdown("---")
-    
-    st.markdown("### Organization")
-    st.write(f"{record.get('organization', 'N/A')}")
-    st.markdown("---")
+    st.write(f"### Comment ID: {record.get('id', 'N/A')}")
+    st.markdown('<hr style="margin-top: -15px; margin-bottom: 10px;">', unsafe_allow_html=True)
+
+    st.markdown(f"#### Organization: {record.get('organization', 'N/A')}")
+    st.markdown(f'<p style="font-size: 18px;"><b>Submitter\'s Name:</b> {record.get("firstName", "N/A")} {record.get("lastName", "N/A")}</p>', unsafe_allow_html=True)
+    st.markdown('<hr style="margin-top: -15px; margin-bottom: 10px;">', unsafe_allow_html=True)
 
     st.markdown("### Comment")
     comment_text = record.get('comment', '')
     if comment_text:
-        st.markdown(f"{comment_text}")
+        st.markdown(f'<p style="font-size: 18px; line-height: 1.6;">{comment_text}</p>', unsafe_allow_html=True)
     else:
         st.warning("⚠️ No comment text found.")
 
-    st.markdown("---")
+    st.markdown('<hr style="margin-top: -15px; margin-bottom: 10px;">', unsafe_allow_html=True)
 
     st.markdown("### Attachment Text")
     attachment = record.get('attachment_text', '')
     if attachment:
         with st.expander("### Click for full text", expanded=False):
-            st.write(attachment)
+            st.markdown(f'<p style="font-size: 18px; line-height: 1.6; white-space: pre-wrap;">{attachment}</p>', unsafe_allow_html=True)
     else:
         st.write("None")
-
-    st.markdown("---")
-
-    col1 = st.columns(1)[0]
-    with col1:
-         st.write(f"**First Name:** {record.get('firstName', 'N/A')}")
-         st.write(f"**Last Name:** {record.get('lastName', 'N/A')}")
-
-    st.markdown("---")
-
+    st.markdown('<hr style="margin-top: -15px; margin-bottom: 10px;">', unsafe_allow_html=True)
+    
     st.markdown("### 🏷️ Your Coding Decisions")
 
     is_organizational = st.radio(
@@ -358,22 +347,6 @@ if current_index < total_records:
         horizontal=True,
         index=None
     )
-
-    website_choice = st.radio(
-        "**2. Website**",
-        ["Fill in", "None found"],
-        key=f"website_choice_{current_index}",
-        horizontal=True,
-        index=None
-    )
-
-    website_entry = None
-    if website_choice == "Fill in":
-        website_entry = st.text_input(
-            "**Website URL**",
-            key=f"website_entry_{current_index}",
-            placeholder="https://..."
-        )
 
     individual_type = None
     if is_organizational == "No - Individual":
@@ -391,12 +364,30 @@ if current_index < total_records:
     geographic_scope = geographic_scope_other = None
 
     if is_organizational == "Yes - Organizational":
+        
+        website_choice = st.radio(
+            "**2. Website**",
+            ["Fill in", "None found"],
+            key=f"website_choice_{current_index}",
+            horizontal=True,
+            index=None
+            )
+            
+        website_entry = None
+        if website_choice == "Fill in":
+            website_entry = st.text_input(
+                "**Website URL**",
+                key=f"website_entry_{current_index}",
+                placeholder="https://..."
+                )
+                
         org_sector = st.multiselect(
             "**3. Organization sector** (select all that apply)",
             list(ORG_SECTOR_MAPPING.keys()),
             key=f"org_sector_{current_index}",
             placeholder="Choose one or more..."
-        )
+            )
+        
         if "other" in (org_sector or []):
             org_sector_other = st.text_input(
                 "**Specify organization sector**",
@@ -474,13 +465,13 @@ if current_index < total_records:
         validation_errors = []
         if not is_organizational:
             validation_errors.append("Please select whether this is organizational or not.")
-        if not website_choice:
-            validation_errors.append("Please select a website option.")
-        if website_choice == "Fill in" and not website_entry:
-            validation_errors.append("Please enter the website URL.")
         if is_organizational == "No - Individual" and not individual_type:
             validation_errors.append("Please select an individual type.")
         if is_organizational == "Yes - Organizational":
+            if not website_choice:
+              validation_errors.append("Please select a website option.")
+            if website_choice == "Fill in" and not website_entry:
+              validation_errors.append("Please enter the website URL.")
             if not org_sector:
               validation_errors.append("Please select an organization sector.")
             if org_sector and "other" in org_sector and not org_sector_other:
@@ -536,8 +527,7 @@ if current_index < total_records:
                 "attachment_status": ATTACHMENT_STATUS_MAPPING.get(attachment_status) if attachment_status else None,
                 "attachment_status_text": attachment_status,
 
-                "original_org_field": record.get('organization', ''),
-                "original_website": record.get('website', ''),
+                "original_org_field": record.get('organization', '')
             }
 
             st.session_state.coded_data.append(row)
@@ -571,7 +561,7 @@ def render_download_section():
         "geographic_scope", "geographic_scope_text", "geographic_scope_other",
         "confidence",
         "attachment_status", "attachment_status_text",
-        "original_org_field", "original_website",
+        "original_org_field",
     ]
     ordered_cols = [c for c in preferred_cols if c in df_coded.columns]
     ordered_cols += [c for c in df_coded.columns if c not in ordered_cols]
