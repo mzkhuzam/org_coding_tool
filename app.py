@@ -365,21 +365,24 @@ if current_index < total_records:
 
     if is_organizational == "Yes - Organizational":
         
+        if f"website_choice_{current_index}" not in st.session_state:
+            st.session_state[f"website_choice_{current_index}"] = None
+
         website_choice = st.radio(
             "**2. Website**",
             ["Fill in", "None found"],
             key=f"website_choice_{current_index}",
             horizontal=True,
-            index=None
-            )
-            
+            index=None,
+        )
+
         website_entry = None
         if website_choice == "Fill in":
             website_entry = st.text_input(
                 "**Website URL**",
                 key=f"website_entry_{current_index}",
-                placeholder="https://..."
-                )
+                placeholder="https://...",
+            )
                 
         org_sector = st.multiselect(
             "**3. Organization sector** (select all that apply)",
