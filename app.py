@@ -349,6 +349,18 @@ if current_index < total_records:
     )
 
     individual_type = None
+
+    website_choice = None
+    website_entry = None
+
+    org_sector = None
+    org_sector_other = None
+    org_type = None
+    org_type_other = None
+    population_served = None
+    geographic_scope = None
+    geographic_scope_other = None
+    
     if is_organizational == "No - Individual":
         individual_type = st.selectbox(
             "**3. Individual type**",
@@ -358,16 +370,8 @@ if current_index < total_records:
             placeholder="Choose an option..."
         )
 
-    org_sector = org_sector_other = None
-    org_type = org_type_other = None
-    population_served = None
-    geographic_scope = geographic_scope_other = None
-
     if is_organizational == "Yes - Organizational":
         
-        if f"website_choice_{current_index}" not in st.session_state:
-            st.session_state[f"website_choice_{current_index}"] = None
-
         website_choice = st.radio(
             "**2. Website**",
             ["Fill in", "None found"],
@@ -466,7 +470,7 @@ if current_index < total_records:
 
     if submit_button:
         validation_errors = []
-        if not is_organizational:
+        if is_organizational is None:
             validation_errors.append("Please select whether this is organizational or not.")
         if is_organizational == "No - Individual" and not individual_type:
             validation_errors.append("Please select an individual type.")
@@ -501,7 +505,10 @@ if current_index < total_records:
                 "original_id": record.get('id', ''),
                 "comment_text": comment_text,
 
-                "website": website_entry if website_choice == "Fill in" else "none found",
+                "website": (
+                    website_entry if website_choice == "Fill in"
+                    else ("none found" if website_choice == "None found" else None)
+                    ),
                 "website_choice": website_choice,
                 "extra_notes": notes,
 
@@ -525,10 +532,10 @@ if current_index < total_records:
                 "geographic_scope_text": geographic_scope,
                 "geographic_scope_other": geographic_scope_other,
 
-                "confidence": CONFIDENCE_MAPPING.get(confidence) if confidence else None,
+                "confidence": CONFIDENCE_MAPPING.get(confidence) if confidence is not None else None,
 
-                "attachment_status": ATTACHMENT_STATUS_MAPPING.get(attachment_status) if attachment_status else None,
-                "attachment_status_text": attachment_status,
+                "attachment_status": 3 if attachment_problem else None,
+                "attachment_status_text": "missing or unreadable" if attachment_problem else None,
 
                 "original_org_field": record.get('organization', '')
             }
