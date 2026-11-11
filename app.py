@@ -114,8 +114,8 @@ CONFIDENCE_MAPPING = {
 # CODER ASSIGNMENTS
 # =============================================================================
 CODER_RANGES = {
-    "Maya": {"start": 0, "end": 100, "name": "Maya"},
-    "Leen": {"start": 0, "end": 100, "name": "Leen"},
+    "Maya": {"start": 0, "end": 300, "name": "Maya"},
+    "Leen": {"start": 0, "end": 300, "name": "Leen"},
 }
 
 # =============================================================================
